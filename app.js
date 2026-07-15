@@ -3,11 +3,40 @@
  * Handles lightweight, context-efficient UI interactions:
  * 1. Theme toggling (Dark/Light mode)
  * 2. Hero Background Slideshow Transitions
+ * 3. Mobile Navigation Hamburger Toggle
  */
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initHeroSlideshow();
+  initMobileNav();
 });
+
+/**
+ * Manages the mobile hamburger menu toggle and overlay navigation.
+ */
+function initMobileNav() {
+  const hamburger = document.getElementById('hamburger-toggle');
+  const navGroup = document.getElementById('nav-group');
+  if (!hamburger || !navGroup) return;
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = hamburger.classList.toggle('is-open');
+    navGroup.classList.toggle('is-open');
+    hamburger.setAttribute('aria-expanded', isOpen);
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Close menu when a nav link is tapped
+  navGroup.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('is-open');
+      navGroup.classList.remove('is-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+}
 
 /**
  * Initializes light/dark theme switching and persists preference.
